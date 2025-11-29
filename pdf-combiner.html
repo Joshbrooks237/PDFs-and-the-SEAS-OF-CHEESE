@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧀 Aristotle's Cheese Sea PDF Melter - Swimming in the Seas of Cheese</title>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffd93d 0%, #f6b93b 50%, #ffa502 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 222, 89, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(250, 211, 144, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 193, 7, 0.3) 0%, transparent 50%);
+            animation: cheeseFlow 15s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes cheeseFlow {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(50px, -30px) scale(1.1);
+            }
+            66% {
+                transform: translate(-30px, 50px) scale(0.9);
+            }
+        }
+
+        .header {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease-out, float 3s ease-in-out infinite;
+            text-shadow: 3px 3px 6px rgba(218, 142, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3),
+                         0 0 20px rgba(255, 193, 7, 0.6);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            font-style: italic;
+            color: #f9f3e6;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .container {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffefba 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(218, 142, 0, 0.4),
+                        0 0 40px rgba(255, 193, 7, 0.3);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            animation: fadeInUp 0.8s ease-out, containerFloat 4s ease-in-out infinite;
+            border: 3px solid rgba(255, 193, 7, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes containerFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-8px) rotate(0.5deg);
+            }
+            75% {
+                transform: translateY(8px) rotate(-0.5deg);
+            }
+        }
+
+        .drop-zone {
+            border: 3px dashed #f6b93b;
+            border-radius: 15px;
+            padding: 60px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #fffbea 0%, #ffeaa7 50%, #fdcb6e 100%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: cheeseBubble 3s ease-in-out infinite;
+        }
+
+        .drop-zone::before {
+            content: '🧀';
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            pointer-events: none;
+        }
+
+        .drop-zone:hover {
+            border-color: #e17055;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 50%, #fab1a0 100%);
+            transform: scale(1.02);
+        }
+
+        .drop-zone.drag-over {
+            border-color: #d63031;
+            background: linear-gradient(135deg, #fab1a0 0%, #fdcb6e 50%, #ffeaa7 100%);
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 193, 7, 0.6);
+        }
+
+        @keyframes cheeseBubble {
+            0%, 100% {
+                background-size: 100% 100%;
+            }
+            50% {
+                background-size: 105% 105%;
+            }
+        }
+
+        .drop-zone-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+
+        .drop-zone-text {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .drop-zone-subtext {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            background: linear-gradient(135deg, #fffbea 0%, #ffeaa7 100%);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            animation: slideIn 0.3s ease-out, itemFloat 2s ease-in-out infinite;
+            cursor: move;
+            border: 2px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .file-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.5);
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        }
+
+        @keyframes itemFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .file-size {
+            color: #888;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-remove {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-remove:hover {
+            background: #ee5a52;
+            transform: scale(1.05);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ffa502 0%, #ff6348 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            margin-top: 30px;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(255, 99, 72, 0.3);
+            animation: buttonPulse 2s ease-in-out infinite;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 99, 72, 0.5);
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% {
+                box-shadow: 0 5px 15px rgba(255, 99, 72, 0.3);
+            }
+            50% {
+                box-shadow: 0 5px 25px rgba(255, 99, 72, 0.5);
+            }
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-clear {
+            background: #f1f3f5;
+            color: #666;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-clear:hover {
+            background: #e9ecef;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #f1f3f5;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffa502 0%, #ff6348 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            animation: progressFlow 2s linear infinite;
+            background-size: 200% 100%;
+        }
+
+        @keyframes progressFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .wisdom-quote {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffeaa7 100%);
+            border-radius: 10px;
+            border-left: 5px solid #ff6348;
+            font-style: italic;
+            color: #2d3436;
+            animation: fadeIn 1s ease-out, quoteFloat 3s ease-in-out infinite;
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+        }
+
+        @keyframes quoteFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .wisdom-quote::before {
+            content: "📜 ";
+            font-style: normal;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .drag-handle {
+            cursor: move;
+            color: #999;
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        .cheese-bubble {
+            position: fixed;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 234, 167, 0.8), rgba(253, 203, 110, 0.6));
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5),
+                        0 0 20px rgba(255, 193, 7, 0.4);
+            animation: swim linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes swim {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(50vh) translateX(var(--swim-x)) scale(1);
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(var(--swim-x-end)) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .container {
+                padding: 20px;
+            }
+            .drop-zone {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧀 Aristotle's Cheese Sea PDF Melter</h1>
+        <p>"Swimming through the seas of cheese, we unite the scrolls"</p>
+    </div>
+
+    <div class="container">
+        <div class="drop-zone" id="dropZone">
+            <div class="drop-zone-icon">🧀📄</div>
+            <div class="drop-zone-text">Drop your PDF scrolls into the cheese sea</div>
+            <div class="drop-zone-subtext">or click to fish them from your library</div>
+        </div>
+        
+        <input type="file" id="fileInput" class="file-input" accept=".pdf" multiple>
+
+        <div class="file-list" id="fileList"></div>
+
+        <button class="btn btn-primary" id="combineBtn" disabled>
+            🧀 Melt PDFs Together in the Cheese Sea
+        </button>
+
+        <button class="btn btn-clear" id="clearBtn" style="display: none;">
+            🌊 Drain the Cheese Sea
+        </button>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+        </div>
+
+        <div class="wisdom-quote">
+            "In the seas of cheese, all PDFs swim together as one. The aged cheddar of wisdom melts the boundaries between documents." - Aristotle (probably)
+        </div>
+    </div>
+
+    <script>
+        const { PDFDocument } = PDFLib;
+        
+        let pdfFiles = [];
+        
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const combineBtn = document.getElementById('combineBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+
+        // Click to select files
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // Drag and drop handlers
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        function handleFiles(files) {
+            const pdfFilesArray = Array.from(files).filter(file => file.type === 'application/pdf');
+            
+            if (pdfFilesArray.length === 0) {
+                alert('🧀 Aristotle says: Only PDF scrolls can swim in the cheese sea!');
+                return;
+            }
+
+            pdfFiles.push(...pdfFilesArray);
+            updateFileList();
+            updateButtons();
+        }
+
+        function updateFileList() {
+            fileList.innerHTML = '';
+            
+            pdfFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.draggable = true;
+                fileItem.dataset.index = index;
+                
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <span class="drag-handle">☰</span>
+                        <span class="file-icon">🧀📄</span>
+                        <div>
+                            <span class="file-name">${file.name}</span>
+                            <span class="file-size">(${formatFileSize(file.size)})</span>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="btn btn-remove" onclick="removeFile(${index})">✕</button>
+                    </div>
+                `;
+
+                // Drag and drop for reordering
+                fileItem.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', index);
+                    fileItem.style.opacity = '0.5';
+                });
+
+                fileItem.addEventListener('dragend', () => {
+                    fileItem.style.opacity = '1';
+                });
+
+                fileItem.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                fileItem.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    const toIndex = index;
+                    
+                    if (fromIndex !== toIndex) {
+                        const [movedFile] = pdfFiles.splice(fromIndex, 1);
+                        pdfFiles.splice(toIndex, 0, movedFile);
+                        updateFileList();
+                    }
+                });
+                
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(index) {
+            pdfFiles.splice(index, 1);
+            updateFileList();
+            updateButtons();
+        }
+
+        function updateButtons() {
+            if (pdfFiles.length > 0) {
+                combineBtn.disabled = false;
+                clearBtn.style.display = 'block';
+            } else {
+                combineBtn.disabled = true;
+                clearBtn.style.display = 'none';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        clearBtn.addEventListener('click', () => {
+            pdfFiles = [];
+            fileInput.value = '';
+            updateFileList();
+            updateButtons();
+        });
+
+        combineBtn.addEventListener('click', async () => {
+            if (pdfFiles.length < 2) {
+                alert('🧀 Aristotle says: The cheese sea needs at least two scrolls to melt together!');
+                return;
+            }
+
+            try {
+                combineBtn.disabled = true;
+                combineBtn.textContent = '🌊 Melting in the cheese sea...';
+                progressContainer.style.display = 'block';
+                
+                // Create a new PDF document
+                const mergedPdf = await PDFDocument.create();
+                
+                // Process each PDF
+                for (let i = 0; i < pdfFiles.length; i++) {
+                    const file = pdfFiles[i];
+                    const progress = ((i + 1) / pdfFiles.length) * 100;
+                    progressFill.style.width = progress + '%';
+                    progressFill.textContent = Math.round(progress) + '%';
+                    
+                    // Read the file
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await PDFDocument.load(arrayBuffer);
+                    
+                    // Copy all pages
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach(page => mergedPdf.addPage(page));
+                    
+                    // Small delay for visual feedback
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                
+                // Save the merged PDF
+                const mergedPdfBytes = await mergedPdf.save();
+                
+                // Create download link
+                const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'cheese-sea-melted-' + Date.now() + '.pdf';
+                a.click();
+                
+                // Cleanup
+                URL.revokeObjectURL(url);
+                
+                // Show success
+                progressFill.textContent = '✓ Melted!';
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    progressFill.style.width = '0%';
+                    combineBtn.textContent = '🧀 Melt PDFs Together in the Cheese Sea';
+                    combineBtn.disabled = false;
+                }, 2000);
+                
+                alert('🧀 Aristotle says: Your scrolls have melted together beautifully in the cheese sea!');
+                
+            } catch (error) {
+                console.error('Error combining PDFs:', error);
+                alert('🧀 The cheese sea encountered turbulence: ' + error.message);
+                combineBtn.disabled = false;
+                combineBtn.textContent = '🧀 Melt PDFs Together in the Cheese Sea';
+                progressContainer.style.display = 'none';
+            }
+        });
+
+        // Prevent default drag behavior on the document
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+        });
+
+        // Create floating cheese bubbles
+        function createCheeseBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'cheese-bubble';
+            
+            const size = Math.random() * 80 + 20; // 20-100px
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            
+            const swimX = (Math.random() - 0.5) * 200; // -100 to 100px
+            const swimXEnd = (Math.random() - 0.5) * 300; // -150 to 150px
+            bubble.style.setProperty('--swim-x', swimX + 'px');
+            bubble.style.setProperty('--swim-x-end', swimXEnd + 'px');
+            
+            const duration = Math.random() * 10 + 8; // 8-18s
+            bubble.style.animationDuration = duration + 's';
+            
+            document.body.appendChild(bubble);
+            
+            setTimeout(() => {
+                bubble.remove();
+            }, duration * 1000);
+        }
+
+        // Create bubbles continuously
+        setInterval(createCheeseBubble, 600);
+        
+        // Create initial bubbles
+        for (let i = 0; i < 10; i++) {
+            setTimeout(createCheeseBubble, i * 200);
+        }
+    </script>
+</body>
+</html>
